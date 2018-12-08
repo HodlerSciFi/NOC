@@ -28,22 +28,10 @@ class Walker {
   
   //オブジェクトを動かす
   void step() {
-    //0, 1, 2, 3のいずれか
-    int choice = int(random(4));
-    
-    switch(choice) {
-      case 0:
-        x ++;  //前
-        break;
-      case 1:
-        x --;  //後ろ
-        break;
-      case 2:
-        y ++;  //右
-        break;
-      case 3:
-        y --;  //左
-        break;
-    } 
+    //Walkerがある方向に進む確率はそれぞれ等しい
+    int stepx = int(random(3)) - 1; //-1, 0, 1いずれかを生成
+    int stepy = int(random(3)) - 1;
+    x += stepx;
+    y += stepy;
   }
 }
