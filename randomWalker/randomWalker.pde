@@ -28,10 +28,16 @@ class Walker {
   
   //オブジェクトを動かす
   void step() {
-    //Walkerがある方向に進む確率->右、下に進む傾向
-    int stepx = int (random(4)) - 1; //-1, 0, 1, 2いずれかを生成
-    int stepy = int (random(-1, 3)) - 1; //-2, -1, 0, 1いずれか
-    x += stepx;
-    y += stepy;
+    //右に移動する傾向があるウォーカー
+    float r = random(1);
+    if (r < 0.4) {
+      x ++;
+    }else if(r < 0.6) {
+      x --;
+    }else if(r < 0.8) {
+      y ++;
+    }else {
+      y --;
+    }
   }
 }
