@@ -1,21 +1,28 @@
 //パーリンノイズのマッピング
 //パーリンノイズnoise()の範囲は0-1なので、map()で任意の範囲にマッピングする
 float tx = 3;
-float ty = 2;
+float ty = 20;
+float r = 100;
+float g = 200;
+float b = 300;
 
 void setup() {
   size(300, 300);
-  background(#09002E);
+  background(255);
 }
 
 void draw() {
   float x = mapNoise(tx, 0, width);
   float y = mapNoise(ty, 0, height);
-  fill(#FA6D82);
+  noStroke();
+  fill(mapNoise(r, 0, 255),mapNoise(g, 0, 255), mapNoise(b, 0, 255),  20);
   ellipse(x, y, 16, 16);
   println(x, y);
-  tx += 0.01;
-  ty += 0.01;
+  tx += 0.02;
+  ty += 0.02;
+  r += 0.01;
+  g += 0.01;
+  b += 0.01;
 }
 
 //パーリンノイズのマッピング関数
