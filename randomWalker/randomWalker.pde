@@ -1,19 +1,24 @@
 //グローバル変数
-Walker w;
+Walker w; //ウォーカーオブジェクト
+float xoff, yoff;  //パーリンノイズのためのオフセット値、drawごとに変化する
 
 void setup() {
   size(640, 360);
   w = new Walker();
+  xoff = 0;
+  yoff = 1000;
   background(255);
 }
 
 void draw() {
-  w.step();
+  w.step(xoff, yoff);
   w.display();
+  xoff += 0.01;
+  yoff += 0.01;
 }
 class Walker {
-  int x;
-  int y;
+  float x;
+  float y;
   
   Walker() {
     x = width/2;
@@ -27,39 +32,20 @@ class Walker {
   }
   
   //オブジェクトを動かす
-  void step() {
-    //マウスの方向に移動する傾向が50%のウォーカー
-    //現在のウォーカーの座標とマウスの座標の差(方向)
-    int dx = x - mouseX;
-    int dy = y - mouseY;
+  void step(float xoff, float yoff) {
+    //ステップサイズをパーリンノイズで決める
     //移動距離
-    int addX = 0;
-    int addY = 0;
-    
-    if(dx <= 0 && dy >= 0) { //マウスが右上
-      addX = 1;
-      addY  = -1;
-    }else if(dx <= 0 && dy < 0) { //マウスが右下
-      addX = 1;
-      addY = 1;
-    }else if(dx > 0 && dy >= 0){ //マウスが左上
-      addX = -1;
-      addY = -1;
-    }else if (dx > 0 && dy < 0) { //マウスが左下
-      addX = -1;
-      addY = 1;
-    }
-    float r = random(1);
-    //50%の確率でマウスの方向へ、それ以外の場合はてきとう
-    if (r < 0.5) {
-      x += addX;
-      y += addY;
-    }else if(r < 0.6) {
-      x --;
-    }else if(r < 0.8) {
-      y ++;
-    }else {
-      y --;
-    }
+    float addX = mapNoise(xoff, -2, 2);
+    float addY = mapNoise(yoff, -2, 2);    
+    x += addX;
+    y += addY;
   }
+  
+  //パーリンノイズのマッピング関数
+float mapNoise(float t, float mapMin, float mapMax) {
+  float n = noise(t);
+  //マッピングしたい値、現在の値の範囲(最小値、最大値)、使いたい範囲
+  float x = map(n, 0, 1, mapMin, mapMax);
+  return x;
+}
 }
