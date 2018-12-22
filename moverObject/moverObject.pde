@@ -4,7 +4,7 @@
 Mover mover;
 
 void setup() {
-  size(300, 400);
+  size(600, 300);
   mover = new Mover();
 }
 
@@ -16,14 +16,20 @@ void draw() {
 
 class Mover {
   PVector location;  //位置
-  PVector velocity;  //速度
+  PVector velocity;  //速度: 位置の変化の割合
+  PVector acceleration; //加速度: 速度の変化の割合
+  float topspeed; //速度の大きさを制限
   
   Mover() {
-    location = new PVector(random(width), random(height));
-    velocity = new PVector(random(-2, 2), random(-2, 2));
+    location = new PVector(width/2, height/2);
+    velocity = new PVector(0, 0);
+    acceleration = new PVector(-0.001, 0.01);  //等加速度
+    topspeed = 10;
   }
   //Moverを動かす
   void update() {
+    velocity.add(acceleration);  //速度は加速度によって変化し、topspeedによって制限される
+    velocity.limit(topspeed);
     location.add(velocity);
   }
   //Moverを表示
