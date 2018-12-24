@@ -1,17 +1,23 @@
 //移動オブジェクト
 //運動のすべてのロジックをクラスの中にカプセル化していく
+//マウスに向かう加速度を導入
+//マウスに向かってMoverの群が加速する
 
-Mover mover;
+Mover[] movers = new Mover[20]; //オブジェクトの配列
 
 void setup() {
   size(600, 300);
-  mover = new Mover();
+  for(int i = 0; i < movers.length; i ++) {
+    movers[i] = new Mover(); //配列内の各オブジェクトを初期化
+  }
 }
 
 void draw() {
-  mover.update();
-  mover.checkEdges();
-  mover.display();
+  for(int i = 0; i < movers.length; i ++) { //配列内のすべてのオブジェクトに対して関数を呼び出し
+  movers[i].update();
+  movers[i].checkEdges();
+  movers[i].display();
+  }
 }
 
 class Mover {
@@ -19,34 +25,31 @@ class Mover {
   PVector velocity;  //速度: 位置の変化の割合
   PVector acceleration; //加速度: 速度の変化の割合
   float topspeed; //速度の大きさを制限
-  float toff; //加速度の大きさを決めるオフセット値(パーリンノイズ用)
+  
 
   Mover() {
     location = new PVector(width/2, height/2);
-    velocity = new PVector(0, 0);
-    acceleration = new PVector(-0.001, 0.01);  
-    topspeed = 10;
-    toff = 0.001;
+    velocity = new PVector(0, 0);  
+    topspeed = 4;
   }
+  
   //Moverを動かす
   void update() {
-    //完全にランダムな加速度
-    acceleration = PVector.random2D();  //ランダムな方向を指す長さ1のPVectorを返す
-    //正規化（長さ1）されてる加速度をスケーリングする
-    //acceleration.mult(3); //定数値にスケーリング
-    //acceleration.mult(random(5)); //ランダム値にスケーリング
-    acceleration.mult(mapNoise(toff, 0, 3));
-
+    //加速度の計算アルゴリズム
+    PVector mouse = new PVector(mouseX, mouseY);  //マウスの位置ベクトル
+    PVector dir = PVector.sub(mouse, location); ////マウスを指すベクトル(大きさと方向)を求める
+    dir.normalize(); //正規化(大きさは1にして後で自由にスケーリングする)
+    dir.mult(0.5); //スケーリング
+    acceleration = dir; //スケーリングしたマウス方向ベクトルを加速度として設定
     velocity.add(acceleration);  //速度は加速度によって変化し、topspeedによって制限される
     velocity.limit(topspeed);
     location.add(velocity);
-    toff += 0.001;
   }
   //Moverを表示
   void display() {
     stroke(0);
     fill(255);
-    ellipse(location.x, location.y, 3, 3);
+    ellipse(location.x, location.y,6, 6);
   }
   //キャンパスの端に来た時の動作
   //反対側に回りこませる
