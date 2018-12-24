@@ -13,6 +13,7 @@ void setup() {
 }
 
 void draw() {
+  background(255);
   for(int i = 0; i < movers.length; i ++) { //配列内のすべてのオブジェクトに対して関数を呼び出し
   movers[i].update();
   movers[i].checkEdges();
@@ -28,7 +29,7 @@ class Mover {
   
 
   Mover() {
-    location = new PVector(width/2, height/2);
+    location = new PVector(random(width), random(height));
     velocity = new PVector(0, 0);  
     topspeed = 4;
   }
@@ -41,6 +42,7 @@ class Mover {
     float dirMagnitude = dir.mag();  //正規化する前に大きさだけ取得
     dir.normalize(); //正規化(大きさは1にして後で自由にスケーリングする)
     dir.div(dirMagnitude); //マウスに近づくほど加速度が大きくなるようスケーリング
+    dir.mult(2);
     
     acceleration = dir; //スケーリングしたマウス方向ベクトルを加速度として設定
     velocity.add(acceleration);  //速度は加速度によって変化し、topspeedによって制限される
