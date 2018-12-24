@@ -38,8 +38,10 @@ class Mover {
     //加速度の計算アルゴリズム
     PVector mouse = new PVector(mouseX, mouseY);  //マウスの位置ベクトル
     PVector dir = PVector.sub(mouse, location); ////マウスを指すベクトル(大きさと方向)を求める
+    float dirMagnitude = dir.mag();  //正規化する前に大きさだけ取得
     dir.normalize(); //正規化(大きさは1にして後で自由にスケーリングする)
-    dir.mult(0.5); //スケーリング
+    dir.div(dirMagnitude); //マウスに近づくほど加速度が大きくなるようスケーリング
+    
     acceleration = dir; //スケーリングしたマウス方向ベクトルを加速度として設定
     velocity.add(acceleration);  //速度は加速度によって変化し、topspeedによって制限される
     velocity.limit(topspeed);
